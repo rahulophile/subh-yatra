@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subh Yatra</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <style>
+    .video-container {
+            position: relative;
+            width: 100%;
+            height: 500px; /* Adjust as needed */
+            overflow: hidden;
+        }
+
+        #background-video {
+            position: absolute;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translateX(-50%) translateY(-50%);
+            object-fit: cover;
+        }
+    /* Add these styles to your existing CSS or include them here */
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+    }
+    .nav-menu {
+      display: flex;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      z-index: 1000;
+    }
+    .nav-menu li {
+      margin-left: 1rem;
+    }
+    .menu-toggle {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .video-container{
+        height: 300px;
+      }
+      .nav-menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background-color: #333;
+        padding: 1rem;
+      }
+      .nav-menu.active {
+        display: flex;
+      }
+      .nav-menu li {
+        margin: 0.5rem 0;
+      }
+      .menu-toggle {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container nav-container">
+      <h1 class="logo">Subh Yatra</h1>
+      <button class="menu-toggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/">Home</a></li>
+        <li><a href="/routes">Routes</a></li>
+        <li><a href="/analysis">Analysis</a></li>
+        <li><a href="/alerts">Alerts</a></li>
+        <li><a href="/users">User</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container cont">
+    <section id="map">
+      <h2 style="font-size: 1.6em; margin: 20px 0px;">Real-Time Map</h2>
+      <div class="video-container">
+        <video id="background-video" autoplay loop muted playsinline>
+            <source src="/videos/simulation.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    </section>
+
+    <div class="grid">
+      <section id="bus-stats">
+        <div class="card">
+          <h3>Average Time Bus</h3>
+          <p>Count: <span id="avg-time-count">0</span></p>
+        </div>
+        <div class="card">
+          <h3>On Time Bus</h3>
+          <p>Count: <span id="on-time-count">0</span></p>
+        </div>
+        <div class="card">
+          <h3>Delayed Bus</h3>
+          <p>Count: <span id="delayed-count">0</span></p>
+        </div>
+      </section>
+      <section id="alerts">
+        <h3>Alerts</h3>
+        <ul class="alert-list">
+          <li class="high-priority"><a href="#">High Priority Alerts</a></li>
+          <li class="medium-priority"><a href="#">Medium Priority Alerts</a></li>
+          <li class="low-priority"><a href="#">Low Priority Alerts</a></li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2023 Subh Yatra. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/javascripts/main.js"></script>
+  <script>
+    // Add this script to your existing JavaScript file or include it here
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuToggle = document.querySelector('.menu-toggle');
+      const navMenu = document.querySelector('.nav-menu');
+
+      menuToggle.addEventListener('click', function() {
+        navMenu.classList.toggle('active');
+      });
+    });
+  </script>
+</body>
+</html>

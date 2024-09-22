@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <title>Subh Yatra - User Account</title>
+    <style>
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: var(--accent-blue);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .toggle-form {
+            text-align: center;
+            margin-top: 15px;
+        }
+        #signup-form {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- <%- include('partials/header') %> -->
+    <!-- <%- include('partials/nav') %> -->
+    <%- include('partials/navbar') %>
+
+    <main class="container">
+        <h1 style="font-size: 1.6em; margin: 20px 0px;">User Account</h1>
+        <div class="form-container">
+            <form id="login-form" action="/users/login" method="POST">
+                <h2>Login</h2>
+                <div class="form-group">
+                    <label for="login-username">Username:</label>
+                    <input type="text" id="login-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                <button type="submit">Login</button>
+                <div class="toggle-form">
+                    <p>Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
+                </div>
+            </form>
+
+            <form id="signup-form" action="/users/signup" method="POST">
+                <h2>Sign Up</h2>
+                <div class="form-group">
+                    <label for="signup-username">Username:</label>
+                    <input type="text" id="signup-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email:</label>
+                    <input type="email" id="signup-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password:</label>
+                    <input type="password" id="signup-password" name="password" required>
+                </div>
+                <button type="submit">Sign Up</button>
+                <div class="toggle-form">
+                    <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+    <script src="/javascripts/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const showSignup = document.getElementById('show-signup');
+            const showLogin = document.getElementById('show-login');
+
+            showSignup.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+            });
+
+            showLogin.addEventListener('click', function(e) {
+                e.preventDefault();
+                signupForm.style.display = 'none';
+                loginForm.style.display = 'block';
+            });
+
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Here you would typically send the signup data to the server
+                // For this example, we'll just switch to the login form
+                alert('Sign up successful! Please log in.');
+                signupForm.style.display = 'none';
+                loginForm.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

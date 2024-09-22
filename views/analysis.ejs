@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <title>Subh Yatra - Analysis</title>
+    <style>
+        body {
+            padding-top: 60px; /* Adjust this value to match your navbar height */
+        }
+        .route-analysis {
+            margin-bottom: 40px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .graph-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .graph {
+            width: 100%;
+            text-align: center;
+        }
+        .graph img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+        }
+        
+        /* Responsive styles for PC */
+        @media screen and (min-width: 768px) {
+            .graph-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .graph {
+                width: 30%; /* Adjust if needed */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- <%- include('partials/header') %> -->
+    <!-- <%- include('partials/nav') %> -->
+    <%- include('partials/navbar') %>
+
+    <main class="container">
+        <h1 style="font-size: 1.6em; margin: 20px 0px;">Route Analysis</h1>
+        <section id="analysis-dashboard">
+            <!-- Route 1 -->
+            <div class="route-analysis">
+                <h2>Route 1: City Center to Suburb</h2>
+                <div class="graph-container">
+                    <div class="graph">
+                        <h3>Clarity of Road</h3>
+                        <img src="/images/1.png" alt="Clarity of Road Graph for Route 1">
+                    </div>
+                    <div class="graph">
+                        <h3>Gathering</h3>
+                        <img src="/images/2.jpg" alt="Gathering Graph for Route 1">
+                    </div>
+                    <div class="graph">
+                        <h3>Weather on Road</h3>
+                        <img src="/images/3.png" alt="Weather on Road Graph for Route 1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Route 2 -->
+            <div class="route-analysis">
+                <h2>Route 2: Airport Express</h2>
+                <div class="graph-container">
+                    <div class="graph">
+                        <h3>Clarity of Road</h3>
+                        <img src="/images/2.jpg" alt="Clarity of Road Graph for Route 2">
+                    </div>
+                    <div class="graph">
+                        <h3>Gathering</h3>
+                        <img src="/images/3.png" alt="Gathering Graph for Route 2">
+                    </div>
+                    <div class="graph">
+                        <h3>Weather on Road</h3>
+                        <img src="/images/1.png" alt="Weather on Road Graph for Route 2">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Route 3 -->
+            <div class="route-analysis">
+                <h2>Route 3: University Line</h2>
+                <div class="graph-container">
+                    <div class="graph">
+                        <h3>Clarity of Road</h3>
+                        <img src="/images/3.png" alt="Clarity of Road Graph for Route 3">
+                    </div>
+                    <div class="graph">
+                        <h3>Gathering</h3>
+                        <img src="/images/2.jpg" alt="Gathering Graph for Route 3">
+                    </div>
+                    <div class="graph">
+                        <h3>Weather on Road</h3>
+                        <img src="/images/1.png" alt="Weather on Road Graph for Route 3">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <%- include('partials/footer') %>
+    <script src="/javascripts/main.js"></script>
+</body>
+</html>

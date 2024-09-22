@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <title>Subh Yatra - Routes</title>
+    <style>
+        .filter-container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .filter-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .filter-form input, .filter-form button {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .filter-form button {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .filter-form button:hover {
+            background-color: #2980b9;
+        }
+        .routes-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .route-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .route-details {
+            flex-grow: 1;
+        }
+        .route-actions {
+            margin-left: 20px;
+        }
+        .route-actions button {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .route-actions button:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .bus-status {
+            margin-top: 20px;
+        }
+        .bus-status table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .bus-status th, .bus-status td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .bus-status th {
+            background-color: #f2f2f2;
+        }
+        .late {
+            color: #dc3545;
+        }
+    </style>
+    <%- include('partials/head') %>
+</head>
+<body>
+    <!-- <%- include('partials/header') %> -->
+    <%- include('partials/navbar') %>
+    
+
+    <main class="container">
+        <h2 style="font-size: 1.6em; margin: 20px 0px;">Bus Routes</h2>
+        
+        <div class="filter-container">
+            <h2>Filter Routes</h2>
+            <form id="filter-form" class="filter-form">
+                <input type="text" id="route-number" placeholder="Route Number">
+                <input type="text" id="start-point" placeholder="Start Point">
+                <input type="text" id="end-point" placeholder="End Point">
+                <button type="submit">Filter</button>
+            </form>
+        </div>
+
+        <ul id="routes-list" class="routes-list">
+            <!-- Routes will be dynamically added here -->
+        </ul>
+
+        <!-- Modal for route details -->
+        <div id="routeModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="modalRouteTitle"></h2>
+                <p id="modalRouteDetails"></p>
+                <div class="bus-status">
+                    <h3>Bus Status</h3>
+                    <table id="busStatusTable">
+                        <thead>
+                            <tr>
+                                <th>Bus Number</th>
+                                <th>Status</th>
+                                <th>Delay</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Bus status will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+    <script src="/javascripts/main.js"></script>
+    <script>
+        // Sample route data with bus information
+        const routes = <%- JSON.stringify(routes) %>;
+
+        function renderRoutes(routesToRender) {
+            const routesList = document.getElementById('routes-list');
+            routesList.innerHTML = '';
+            routesToRender.forEach(route => {
+                const li = document.createElement('li');
+                li.className = 'route-item';
+                li.innerHTML = `
+                    <div class="route-details">
+                        <h3>Route ${route.number}</h3>
+                        <p>From: ${route.start}</p>
+                        <p>To: ${route.end}</p>
+                        <p>Stops: ${route.stops}</p>
+                    </div>
+                    <div class="route-actions">
+                        <button onclick="viewRouteDetails(${route.id})">View Details</button>
+                    </div>
+                `;
+                routesList.appendChild(li);
+            });
+        }
+
+        function filterRoutes() {
+            const routeNumber = document.getElementById('route-number').value.toLowerCase();
+            const startPoint = document.getElementById('start-point').value.toLowerCase();
+            const endPoint = document.getElementById('end-point').value.toLowerCase();
+
+            const filteredRoutes = routes.filter(route => 
+                route.number.toLowerCase().includes(routeNumber) &&
+                route.start.toLowerCase().includes(startPoint) &&
+                route.end.toLowerCase().includes(endPoint)
+            );
+
+            renderRoutes(filteredRoutes);
+        }
+
+        function viewRouteDetails(routeId) {
+            const route = routes.find(r => r.id === routeId);
+            if (!route) return;
+
+            const modal = document.getElementById('routeModal');
+            const modalTitle = document.getElementById('modalRouteTitle');
+            const modalDetails = document.getElementById('modalRouteDetails');
+            const busStatusTable = document.getElementById('busStatusTable').getElementsByTagName('tbody')[0];
+
+            modalTitle.textContent = `Route ${route.number}`;
+            modalDetails.textContent = `From ${route.start} to ${route.end} (${route.stops} stops)`;
+
+            // Clear previous bus status
+            busStatusTable.innerHTML = '';
+
+            // Add bus status rows
+            route.buses.forEach(bus => {
+                const row = busStatusTable.insertRow();
+                row.insertCell(0).textContent = bus.busNumber;
+                row.insertCell(1).textContent = bus.status;
+                const delayCell = row.insertCell(2);
+                delayCell.textContent = bus.delay > 0 ? `${bus.delay} minutes` : '-';
+                if (bus.status === 'Late') {
+                    delayCell.classList.add('late');
+                }
+            });
+
+            modal.style.display = 'block';
+        }
+
+        // Close modal when clicking on <span> (x)
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('routeModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('routeModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderRoutes(routes);
+
+            const filterForm = document.getElementById('filter-form');
+            filterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                filterRoutes();
+            });
+        });
+    </script>
+</body>
+</html>

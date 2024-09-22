@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <title>Subh Yatra - Alerts</title>
+    <style>
+        .alerts-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .alert-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .alert-section h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--dark-blue);
+        }
+        .alert-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .alert-item {
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .high-priority { border-left: 4px solid #dc3545; }
+        .medium-priority { border-left: 4px solid #ffc107; }
+        .low-priority { border-left: 4px solid #28a745; }
+        .alert-time {
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+        .see-more-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: var(--accent-blue);
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .see-more-btn:hover {
+            background-color: #2980b9;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- <%- include('partials/header') %> -->
+    <!-- <%- include('partials/nav') %> -->
+    <%- include('partials/navbar') %>
+
+    <main class="container">
+        <h1 style="font-size: 1.6em; margin: 20px 0px;">Service Alerts</h1>
+        <div class="alerts-container">
+            <% const priorities = ['High', 'Medium', 'Low']; %>
+            <% priorities.forEach(priority => { %>
+                <section class="alert-section">
+                    <h2><%= priority %> Priority Alerts</h2>
+                    <ul class="alert-list" id="<%= priority.toLowerCase() %>-priority-list">
+                        <!-- Top 4 alerts will be dynamically added here -->
+                    </ul>
+                    <button class="see-more-btn" onclick="openModal('<%= priority.toLowerCase() %>')">See More</button>
+                </section>
+            <% }); %>
+        </div>
+    </main>
+
+    <!-- Modal for displaying all alerts -->
+    <div id="alertModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <ul id="modalAlertList" class="alert-list">
+                <!-- All alerts for the selected priority will be added here -->
+            </ul>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+    <script src="/javascripts/main.js"></script>
+    <script>
+        const alerts = {
+            high: [
+                { title: "Major accident on Route 101", description: "Severe delays expected. Buses rerouted via alternate roads.", time: "10 minutes ago" },
+                { title: "Service suspended on Route 202", description: "Due to road construction. Shuttle services available.", time: "30 minutes ago" },
+                { title: "Flash flood warning on Route 303", description: "Service temporarily halted. Please seek alternative transportation.", time: "15 minutes ago" },
+                { title: "Bus breakdown on Route 404", description: "Replacement bus en route. Expect 20-minute delay.", time: "5 minutes ago" },
+                { title: "Emergency road closure on Route 505", description: "All buses diverted. Check website for updated routes.", time: "45 minutes ago" }
+            ],
+            medium: [
+                { title: "Minor delays on Route 606", description: "Due to heavy traffic. Expect 10-15 minute delays.", time: "20 minutes ago" },
+                { title: "Detour on Route 707", description: "Construction work. Buses using alternate streets.", time: "1 hour ago" },
+                { title: "Overcrowding on Route 808", description: "Additional buses being deployed to manage passenger load.", time: "40 minutes ago" },
+                { title: "Traffic signal malfunction near Route 909 stop", description: "Buses may experience slight delays at intersection.", time: "55 minutes ago" },
+                { title: "Weather advisory for Route 1010", description: "Possible slowdowns due to heavy rain. Drive safely.", time: "2 hours ago" }
+            ],
+            low: [
+                { title: "New bus stop added on Route 101", description: "Located at Central Avenue and Oak Street.", time: "3 hours ago" },
+                { title: "Schedule change on Route 202", description: "Weekend timings adjusted. Check website for details.", time: "1 day ago" },
+                { title: "Bus driver appreciation week", description: "Thank your driver! Runs from Monday to Friday.", time: "2 days ago" },
+                { title: "Mobile ticketing now available", description: "Download our app for convenient ticket purchases.", time: "4 days ago" },
+                { title: "Customer satisfaction survey", description: "Please participate to help us improve our services.", time: "1 week ago" }
+            ]
+        };
+
+        function renderAlerts(priority, limit = 2) {
+            const alertList = document.getElementById(`${priority}-priority-list`);
+            alertList.innerHTML = '';
+            alerts[priority].slice(0, limit).forEach(alert => {
+                const li = document.createElement('li');
+                li.className = `alert-item ${priority}-priority`;
+                li.innerHTML = `
+                    <strong>${alert.title}</strong>
+                    <p>${alert.description}</p>
+                    <span class="alert-time">Updated: ${alert.time}</span>
+                `;
+                alertList.appendChild(li);
+            });
+        }
+
+        function openModal(priority) {
+            const modal = document.getElementById('alertModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalAlertList = document.getElementById('modalAlertList');
+
+            modalTitle.textContent = `${priority.charAt(0).toUpperCase() + priority.slice(1)} Priority Alerts`;
+            modalAlertList.innerHTML = '';
+
+            alerts[priority].forEach(alert => {
+                const li = document.createElement('li');
+                li.className = `alert-item ${priority}-priority`;
+                li.innerHTML = `
+                    <strong>${alert.title}</strong>
+                    <p>${alert.description}</p>
+                    <span class="alert-time">Updated: ${alert.time}</span>
+                `;
+                modalAlertList.appendChild(li);
+            });
+
+            modal.style.display = 'block';
+        }
+
+        // Close modal when clicking on <span> (x)
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('alertModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('alertModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderAlerts('high');
+            renderAlerts('medium');
+            renderAlerts('low');
+        });
+    </script>
+</body>
+</html>
