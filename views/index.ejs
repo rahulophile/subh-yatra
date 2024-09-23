@@ -30,6 +30,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 1rem;
+      height: 60px
     }
     .logo {
       font-size: 1.5rem;
@@ -54,24 +56,42 @@
         height: 300px;
       }
       .nav-menu {
+        position: fixed;
+        top: 60px; /* Adjust this value to match your navbar height */
+        left: 0;
+        width: 100%;
+        background-color: #333;
         display: none;
         flex-direction: column;
-        width: 100%;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        background-color: #333;
         padding: 1rem;
+        z-index: 1000; /* Add this line */
       }
       .nav-menu.active {
         display: flex;
+        flex-direction: column;
       }
       .nav-menu li {
         margin: 0.5rem 0;
+        width: 100%; /* Add this line */
+      }
+      .nav-menu li a {
+        display: block; /* Add this line */
+        padding: 0.5rem; /* Add this line */
       }
       .menu-toggle {
         display: block;
       }
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--light-blue); /* Adjust color as needed */
+      z-index: 1000;
+    }
+    main.container {
+      margin-top: 60px; /* Adjust this value based on your navbar height */
     }
   </style>
 </head>
@@ -139,13 +159,21 @@
 
   <script src="/javascripts/main.js"></script>
   <script>
-    // Add this script to your existing JavaScript file or include it here
     document.addEventListener('DOMContentLoaded', function() {
       const menuToggle = document.querySelector('.menu-toggle');
       const navMenu = document.querySelector('.nav-menu');
 
-      menuToggle.addEventListener('click', function() {
+      menuToggle.addEventListener('click', function(e) {
+        e.preventDefault();
         navMenu.classList.toggle('active');
+      });
+
+      // Add this block to close the menu when a link is clicked
+      const navLinks = document.querySelectorAll('.nav-menu a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          navMenu.classList.remove('active');
+        });
       });
     });
   </script>
